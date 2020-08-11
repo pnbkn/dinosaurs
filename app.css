@@ -6,7 +6,9 @@ body {
     text-align: center;
     min-height: 100vh;
 }
-
+li {
+    list-style: none;
+}
 h1 {
     margin: 0;
     font-family: 'Frijole', cursive;
@@ -17,6 +19,12 @@ h1 {
 h2,
 h3 {
     font-family: 'Oswald', sans-serif;
+}
+h4 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5em;
+    font-weight: 300;
+    color: #FFFFFF;
 }
 
 @media (min-width: 650px) {
@@ -39,16 +47,24 @@ p {
 #grid {
     background: #fff url(images/tracks.png) no-repeat;
     background-size: cover;
-    display: flex;
     margin: 2em;
+    width: 100%;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    
+}
+#grid > ul {
+    display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .grid-item {
     position: relative;
     box-sizing: border-box;
-    width: 100%;
+    width: 427px;
+    height: 320px;
+    
 }
 
 .grid-item:nth-child(1){
@@ -114,6 +130,12 @@ p {
     font-size: 1.2em;
     font-weight: 600;
     color: #fff;
+    height: 100px; 
+}
+
+.grid-hover:hover{
+    background: rgba(000,000,000, 0.8);
+    padding: 1rem;
 }
 
 /* Form Styles */
@@ -125,6 +147,9 @@ p {
     margin: 0 auto;
 }
 
+.form-hidden {
+    display: none;
+}
 form p {
     margin-bottom: 0.3em;
     font-size: 1.3em;

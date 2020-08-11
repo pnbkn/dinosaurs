@@ -1,32 +1,148 @@
 
-    // Create Dino Constructor
+  // Create Dino Constructor
+  function Dino(dinos){
+        this.species = dinos.species;
+        this.weight = dinos.weight;
+        this.height = dinos.height;
+        this.diet = dinos.diet;
+        this.where = dinos.where;
+        this.when = dinos.when;
+        this.fact = dinos.fact;
+        this.image = dinos.image;
+
+    }
+
+  // Fetch Dino API
+  const getJSON = async() => {
+      return await fetch("http://127.0.0.1:5500/dino.json")
+      .then(res => res.json())
+      .then(data => {
+        return data;
+      })
+      .catch(err => console.error(err));
+    };
+
+  // Create Human Object
+  const human = (obj) => {
+    const person = new Dino(obj);
+    person.inches = obj.inches;
+    return person;
+  }
+
+  // Make Dinos Objects
+  const dinoObjects = (obj) => (obj.Dinos.map(_dino => new Dino(_dino)));
+
+  //ShortHand
+  const $$ = (selector) => (document.querySelector(selector))
 
 
-    // Create Dino Objects
+  // Use IIFE to get human data from form
+  const humanForm = (()=>{
+      const obj = {}
+      let formContainer = $$("#dino-compare");
+      let name = $$('#name');
+      let weight = $$('#weight');
+      let feet = $$('#feet');
+      let inches = $$('#inches');
+      let diet = $$('#diet');
 
+      // On button click, prepare and display infographic
+      let btn = $$('#btn').addEventListener('click', ()=>{
+        obj.species = name.value,
+        obj.weight = weight.value,
+        obj.height = feet.value,
+        obj.inches = inches.value,
+        obj.diet = diet.value,
+        obj.where = "Planet Earth",
+        obj.when = "Millions of years",
+        obj.fact = "Humans are mammels that have opposable thumbs",
+        obj.image = "/images/human.png"
+       
+        const person = human(obj); // Create Human Object
+        const displayJSON = getJSON().then((result)=>{
+        const dinos = dinoObjects(result); // Create Dinosaurs Objects
+        const grid = createGrid(dinos, person); // Create the Grid
+        })
+        // Remove form from screen on button click
+        formContainer.classList.add("form-hidden");
+      })
 
-    // Create Human Object
+  })();
+   
 
-    // Use IIFE to get human data from form
+  // Create Dino Compare Method 1 - Weight
+  const weight = (w1, w2) => (w1.weight > w2.weight ? 
+      `A ${w1.species} weighs ${w1.weight - w2.weight}lbs more than ${w2.species} does.` :
+      `${w2.species} weighs ${w2.weight - w1.weight}lbs more than a ${w1.species} does.`)
 
+  // Create Dino Compare Method 2 - Height
+  const height =(h1, h2)=>{
+      let dinoHeight = h1.height * 12;
+      let humanHeight = h2.height * 12;
+      let inches = h2.inches;
+      let totalHeight = humanHeight + inches;
 
-    // Create Dino Compare Method 1
-    // NOTE: Weight in JSON file is in lbs, height in inches. 
-
+      if(dinoHeight > totalHeight){
+        return `A ${h1.species} is ${dinoHeight - totalHeight} inches taller than ${h2.species}.`
+      }
+      else if(totalHeight > dinoHeight ){
+        return `${h2.species} is ${totalHeight - dinoHeight} inches taller than a ${h1.species}.`
+      }
+    }
     
-    // Create Dino Compare Method 2
-    // NOTE: Weight in JSON file is in lbs, height in inches.
+  // Create Dino Compare Method 3 - Diet
+  const diet = (d1, d2) => (d1.diet === d2.diet ? 
+      `A ${d1.species} has a ${d1.diet} diet, just like ${d2.species}.` :
+      `A ${d1.species} has a ${d1.diet} diet, which is different from ${d2.species}'s ${d2.diet} diet.`
+       )
 
-    
-    // Create Dino Compare Method 3
-    // NOTE: Weight in JSON file is in lbs, height in inches.
-
-
-    // Generate Tiles for each Dino in Array
   
-        // Add tiles to DOM
+  // Create Grid and Squares
+  const createGrid = (dinos, person) => {
+        dinos.sort(()=> Math.random()-0.5); // Randomize grid order
+        dinos.splice(4,0, person); // Push Human to 4 element in Array
 
-    // Remove form from screen
+        // Create Grid Square
+        const square = (_sq, _idx) => {
+          const tile = {
+            title: dinos[_sq].species,
+            image: dinos[_sq].image,
+            fact: dinos[_sq].fact
+          }
+         // Create List element and add Event Listeners for Mouse Over and Mouse Out
+          const li = document.createElement('li');
+              li.classList.add('grid-item');
+              let html = `
+              <h3>${tile.title}</h3>
+              <img src="${tile.image}"/>
+              <p>${tile.fact}</p>`
+              li.innerHTML = html;
 
-
-// On button click, prepare and display infographic
+              if(_idx !== 4){
+                li.classList.add('grid-hover'); 
+                li.addEventListener('mouseout', ()=>{
+                  li.innerHTML = html;
+                })    
+              
+                li.addEventListener('mouseover', ()=>{
+                  li.innerHTML = `
+                    <h4>${weight(dinos[_sq], person)}</h4>
+                    <h4>${height(dinos[_sq], person)}</h4>
+                    <h4>${diet(dinos[_sq], person)}</h4>`
+                })
+              }
+            return li;
+         }
+         // Render the Grid
+         const render = () => {
+           const gridArr = [0,1,2,3,4,5,6,7,8]
+           const grid = $$('#grid');
+           const ul = document.createElement('ul');
+           let html = gridArr.map((sq, idx) => {
+             ul.appendChild(square(sq, idx)); 
+           });
+          grid.appendChild(ul);
+          return html;
+         }
+    render();
+  }
