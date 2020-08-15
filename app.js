@@ -45,6 +45,7 @@
       let feet = $$('#feet');
       let inches = $$('#inches');
       let diet = $$('#diet');
+      let btnCon = $$('#btn-container');
 
       // On button click, prepare and display infographic
       let btn = $$('#btn').addEventListener('click', ()=>{
@@ -56,7 +57,7 @@
         obj.where = "Planet Earth",
         obj.when = "Millions of years",
         obj.fact = "Humans are mammels that have opposable thumbs",
-        obj.image = "/images/human.png"
+        obj.image = "images/human.png"
        
         const person = human(obj); // Create Human Object
         const displayJSON = getJSON().then((result)=>{
@@ -64,7 +65,21 @@
         const grid = createGrid(dinos, person); // Create the Grid
         })
         // Remove form from screen on button click
-        formContainer.classList.add("form-hidden");
+        formContainer.classList.add("hidden");
+        btnCon.classList.remove("hidden");
+        name.value = "";
+        weight.value = "";
+        feet.value = "";
+        inches.value = "";
+       
+        let btnBack = $$('#btn-back').addEventListener('click', ()=>{
+          let grid = $$('#grid');
+          grid.innerHTML = "";
+          btnCon.classList.add("hidden");
+          formContainer.classList.remove("hidden");
+          delete obj;
+        })
+
       })
 
   })();
