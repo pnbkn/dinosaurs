@@ -64,7 +64,7 @@
         const dinos = dinoObjects(result); // Create Dinosaurs Objects
         const grid = createGrid(dinos, person); // Create the Grid
         })
-        // Remove form from screen on button click
+        // Remove form from screen / clear form fields on button click
         formContainer.classList.add("hidden");
         btnCon.classList.remove("hidden");
         name.value = "";
@@ -72,6 +72,7 @@
         feet.value = "";
         inches.value = "";
        
+        // Set up back button when grid appears
         let btnBack = $$('#btn-back').addEventListener('click', ()=>{
           let grid = $$('#grid');
           grid.innerHTML = "";
