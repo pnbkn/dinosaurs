@@ -1,4 +1,4 @@
-# Dinosaurs - Object Oriented Javascript Project
+# Dinosaurs - Udacity Object Oriented Javascript Project
 
 ## Instructions
 Fill out the form with your name, weight, height and diet preference. Then compare your
