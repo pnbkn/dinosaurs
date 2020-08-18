@@ -56,7 +56,7 @@
         obj.diet = diet.value,
         obj.where = "Planet Earth",
         obj.when = "Millions of years",
-        obj.fact = "Humans are mammels that have opposable thumbs",
+        obj.fact = " ",
         obj.image = "images/human.png"
        
         const person = human(obj); // Create Human Object
@@ -82,56 +82,68 @@
         })
 
       })
-
   })();
    
 
-  // Create Dino Compare Method 1 - Weight
-  const weight = (w1, w2) => (w1.weight > w2.weight ? 
+    // Create Dino Compare Method 1 - Weight
+  Dino.prototype.getWeight = (w1, w2) => (w1.weight > w2.weight ? 
       `A ${w1.species} weighs ${w1.weight - w2.weight}lbs more than ${w2.species} does.` :
       `${w2.species} weighs ${w2.weight - w1.weight}lbs more than a ${w1.species} does.`)
-
-  // Create Dino Compare Method 2 - Height
-  const height =(h1, h2)=>{
-      let dinoHeight = h1.height * 12;
-      let humanHeight = h2.height * 12;
-      let inches = h2.inches;
-      let totalHeight = humanHeight + inches;
-
-      if(dinoHeight > totalHeight){
-        return `A ${h1.species} is ${dinoHeight - totalHeight} inches taller than ${h2.species}.`
-      }
-      else if(totalHeight > dinoHeight ){
-        return `${h2.species} is ${totalHeight - dinoHeight} inches taller than a ${h1.species}.`
-      }
-    }
-    
-  // Create Dino Compare Method 3 - Diet
-  const diet = (d1, d2) => (d1.diet === d2.diet ? 
-      `A ${d1.species} has a ${d1.diet} diet, just like ${d2.species}.` :
-      `A ${d1.species} has a ${d1.diet} diet, which is different from ${d2.species}'s ${d2.diet} diet.`
-       )
-
   
+  // Create Dino Compare Method 2 - Height
+  Dino.prototype.getHeight = (h1, h2)=>{
+    let dinoHeight = h1.height * 12;
+    let humanHeight = h2.height * 12;
+    let inches = h2.inches;
+    let totalHeight = humanHeight + inches;
+
+    if(dinoHeight > totalHeight){
+      return `A ${h1.species} is ${dinoHeight - totalHeight} inches taller than ${h2.species}.`
+    }
+    else if(totalHeight > dinoHeight ){
+      return `${h2.species} is ${totalHeight - dinoHeight} inches taller than a ${h1.species}.`
+    }
+  }
+  // Create Dino Compare Method 3 - Diet
+  Dino.prototype.getDiet = (d1, d2) => (d1.diet === d2.diet ? 
+    `A ${d1.species} has a ${d1.diet} diet, just like ${d2.species}.` :
+    `A ${d1.species} has a ${d1.diet} diet, which is different from ${d2.species}'s ${d2.diet} diet.`
+     )
+
+
   // Create Grid and Squares
   const createGrid = (dinos, person) => {
         dinos.sort(()=> Math.random()-0.5); // Randomize grid order
-        dinos.splice(4,0, person); // Push Human to 4 element in Array
+        dinos.splice(4,0, person); // Push Human to 4th in Array
 
         // Create Grid Square
         const square = (_sq, _idx) => {
+          let randomFact = [];
+          randomFact.push(dinos[_sq].fact);
+          randomFact.push(dinos[_sq].getWeight(dinos[_sq], person));
+          randomFact.push(dinos[_sq].getHeight(dinos[_sq], person));
+          randomFact.push(dinos[_sq].getDiet(dinos[_sq], person));
+          randomFact.sort(()=> Math.random()-0.5); // Randomize fact order
+          if(_sq === 4){
+            const tile = {
+              title: dinos[_sq].species,
+              image: dinos[_sq].image,
+              fact: " "
+            }
+          }
           const tile = {
             title: dinos[_sq].species,
             image: dinos[_sq].image,
-            fact: dinos[_sq].fact
+            fact: randomFact
           }
+
          // Create List element and add Event Listeners for Mouse Over and Mouse Out
           const li = document.createElement('li');
               li.classList.add('grid-item');
               let html = `
               <h3>${tile.title}</h3>
               <img src="${tile.image}"/>
-              <p>${tile.fact}</p>`
+              <p>${tile.fact[0]}</p>`
               li.innerHTML = html;
 
               if(_idx !== 4){
@@ -142,9 +154,9 @@
               
                 li.addEventListener('mouseover', ()=>{
                   li.innerHTML = `
-                    <h4>${weight(dinos[_sq], person)}</h4>
-                    <h4>${height(dinos[_sq], person)}</h4>
-                    <h4>${diet(dinos[_sq], person)}</h4>`
+                  <h4>${tile.fact[1]}</h4>
+                  <h4>${tile.fact[2]}</h4>
+                  <h4>${tile.fact[3]}</h4>`
                 })
               }
             return li;
