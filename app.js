@@ -118,25 +118,43 @@
 
         // Create Grid Square
         const square = (_sq, _idx) => {
-          let randomFact = [];
+        let randomFact = [];
+        if(dinos[_sq].species === "Pigeon"){
+          randomFact = [dinos[_sq].fact]
+        }
+        else if(_sq === 4){
+          randomFact.push("")
+        }
+        else {
           randomFact.push(dinos[_sq].fact);
           randomFact.push(dinos[_sq].getWeight(dinos[_sq], person));
           randomFact.push(dinos[_sq].getHeight(dinos[_sq], person));
           randomFact.push(dinos[_sq].getDiet(dinos[_sq], person));
-          randomFact.sort(()=> Math.random()-0.5); // Randomize fact order
+        }
+
           if(_sq === 4){
-            const tile = {
+            var tile = {
               title: dinos[_sq].species,
               image: dinos[_sq].image,
               fact: " "
             }
           }
-          const tile = {
-            title: dinos[_sq].species,
-            image: dinos[_sq].image,
-            fact: randomFact
+          else if(dinos[_sq].fact === "Pigeon"){
+            var tile = {
+              title: dinos[_sq].species,
+              image: dinos[_sq].image,
+              fact: dinos[_sq].fact
+            }
+          }
+          else {
+            var tile = {
+              title: dinos[_sq].species,
+              image: dinos[_sq].image,
+              fact: randomFact
+            }
           }
 
+          randomFact.sort(()=> Math.random()-0.5); // Randomize fact order
          // Create List element and add Event Listeners for Mouse Over and Mouse Out
           const li = document.createElement('li');
               li.classList.add('grid-item');
@@ -145,19 +163,19 @@
               <img src="${tile.image}"/>
               <p>${tile.fact[0]}</p>`
               li.innerHTML = html;
-
-              if(_idx !== 4){
+            
+              if(tile.fact.length > 1){
                 li.classList.add('grid-hover'); 
                 li.addEventListener('mouseout', ()=>{
-                  li.innerHTML = html;
-                })    
-              
+                li.innerHTML = html;
+
                 li.addEventListener('mouseover', ()=>{
                   li.innerHTML = `
                   <h4>${tile.fact[1]}</h4>
                   <h4>${tile.fact[2]}</h4>
                   <h4>${tile.fact[3]}</h4>`
                 })
+              })
               }
             return li;
          }
